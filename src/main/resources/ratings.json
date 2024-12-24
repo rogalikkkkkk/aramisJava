@@ -1,0 +1,100 @@
+{
+  "ratings": [
+    {
+      "problemName": "Problem 1",
+      "alternativeName": "Alternative 1",
+      "alternativeRatings": [
+        "ЭВ",
+        "С"
+      ]
+    },
+    {
+      "problemName": "Problem 1",
+      "alternativeName": "Alternative 2",
+      "alternativeRatings": [
+        "ЭН",
+        "В"
+      ]
+    },
+    {
+      "problemName": "Problem 1",
+      "alternativeName": "Alternative 3",
+      "alternativeRatings": [
+        "В",
+        "ОН"
+      ]
+    },
+    {
+      "problemName": "Problem 1",
+      "alternativeName": "Alternative 4",
+      "alternativeRatings": [
+        "ОН",
+        "В"
+      ]
+    },
+    {
+      "problemName": "Problem 1",
+      "alternativeName": "Alternative 1",
+      "alternativeRatings": [
+        "ЭН",
+        "С"
+      ]
+    },
+    {
+      "problemName": "Problem 1",
+      "alternativeName": "Alternative 2",
+      "alternativeRatings": [
+        "ЭВ",
+        "ОВ"
+      ]
+    },
+    {
+      "problemName": "Problem 1",
+      "alternativeName": "Alternative 3",
+      "alternativeRatings": [
+        "С",
+        "С"
+      ]
+    },
+    {
+      "problemName": "Problem 1",
+      "alternativeName": "Alternative 4",
+      "alternativeRatings": [
+        "Н",
+        "Н"
+      ]
+    },
+    {
+      "problemName": "Problem 1",
+      "alternativeName": "Alternative 1",
+      "alternativeRatings": [
+        "ОН",
+        "В"
+      ]
+    },
+    {
+      "problemName": "Problem 1",
+      "alternativeName": "Alternative 2",
+      "alternativeRatings": [
+        "ОВ",
+        "Н"
+      ]
+    },
+    {
+      "problemName": "Problem 1",
+      "alternativeName": "Alternative 3",
+      "alternativeRatings": [
+        "ОН",
+        "Н"
+      ]
+    },
+    {
+      "problemName": "Problem 1",
+      "alternativeName": "Alternative 4",
+      "alternativeRatings": [
+        "ЭВ",
+        "ОН"
+      ]
+    }
+  ]
+}

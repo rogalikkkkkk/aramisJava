@@ -1,0 +1,49 @@
+{
+  "problems": [
+    {
+      "problemName": "Problem 1",
+      "criteria": [
+        {
+          "criterionName": "Criterion 1 description",
+          "criterionScale": "long",
+          "optimizationDirection": "max"
+        },
+        {
+          "criterionName": "Criterion 2 description",
+          "criterionScale": "base",
+          "optimizationDirection": "min"
+        }
+      ]
+    },
+    {
+      "problemName": "Problem 2",
+      "criteria": [
+        {
+          "criterionName": "Criterion 1 description",
+          "criterionScale": "short",
+          "optimizationDirection": "min"
+        },
+        {
+          "criterionName": "Criterion 2 description",
+          "criterionScale": "base",
+          "optimizationDirection": "max"
+        }
+      ]
+    },
+    {
+      "problemName": "Problem 3",
+      "criteria": [
+        {
+          "criterionName": "Criterion 1 description",
+          "criterionScale": "long",
+          "optimizationDirection": "max"
+        },
+        {
+          "criterionName": "Criterion 2 description",
+          "criterionScale": "short",
+          "optimizationDirection": "max"
+        }
+      ]
+    }
+  ]
+}
