@@ -3,6 +3,7 @@ package org.example;
 import org.example.service.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,7 +17,16 @@ public class Main {
         int criteriaCount = 5;
         int expertsCount = 5;
 
-        Map<String, List<RatingWithProblem>> alternativesWithItsRatings;
+        // Number of values must be same as number of all ratings
+        Map<String, Integer> ratingDistribution = new HashMap<>() {{
+            put("ОВ", 5);
+            put("В", 5);
+            put("С", 5);
+            put("Н", 5);
+            put("ОН", 5);
+        }};
+
+        List<RatingWithProblem> joinedRatings;
 
         if (!generateData) {
             ProblemService problemService = new ProblemService();
@@ -27,7 +37,7 @@ public class Main {
             List<Rating> ratings = ratingService.loadRatings("/ratings.json");
 
             JoinService joinService = new JoinService();
-            List<RatingWithProblem> joinedRatings = joinService.mapRatingsToCriteria("Problem 1", problems, ratings);
+            joinedRatings = joinService.mapRatingsToCriteria("Problem 1", problems, ratings);
 
             Map<String, List<RatingWithProblem>> groupedByAlternativeName = joinedRatings.stream()
                     .collect(Collectors.groupingBy(rwp -> rwp.rating().getAlternativeName()));
@@ -38,34 +48,34 @@ public class Main {
                 System.out.println("Alternative Name: " + alternativeName);
                 group.forEach(rwp -> System.out.println("  Rating: " + rwp.rating().getAlternativeRatings()));
             });
-
-            System.out.println("-------------------------\n");
-            System.out.println("Normalized ratings");
-
-            UpdateRatingsService updateRatingsService = new UpdateRatingsService();
-            List<RatingWithProblem> newGrouped = updateRatingsService.mapOldRatingsToNew(joinedRatings);
-
-            alternativesWithItsRatings = newGrouped.stream()
-                    .collect(Collectors.groupingBy(rwp -> rwp.rating().getAlternativeName()));
-
-            alternativesWithItsRatings.forEach((alternativeName, group) -> {
-                System.out.println("Alternative Name: " + alternativeName);
-                group.forEach(rwp -> System.out.println("  Rating: " + rwp.rating().getAlternativeRatings()));
-            });
         } else {
-            alternativesWithItsRatings = RatingsGenerator.generateData(alternativesCount, criteriaCount, expertsCount);
-
-            System.out.println("Generated ratings");
-            alternativesWithItsRatings.forEach((alternativeName, group) -> {
-                System.out.println("Alternative Name: " + alternativeName);
-                group.forEach(rwp -> System.out.println("  Rating: " + rwp.rating().getAlternativeRatings()));
-            });
+            joinedRatings = RatingsGenerator.generateData(
+                    alternativesCount,
+                    criteriaCount,
+                    expertsCount,
+                    ratingDistribution
+            );
         }
+
+
+        System.out.println("-------------------------\n");
+        System.out.println(generateData ? "Generated ratings" : "Normalized ratings");
+
+        UpdateRatingsService updateRatingsService = new UpdateRatingsService();
+        List<RatingWithProblem> newGrouped = updateRatingsService.mapOldRatingsToNew(joinedRatings);
+
+        Map<String, List<RatingWithProblem>> alternativesWithItsRatings = newGrouped.stream()
+                .collect(Collectors.groupingBy(rwp -> rwp.rating().getAlternativeName()));
+
+        alternativesWithItsRatings.forEach((alternativeName, group) -> {
+            System.out.println("Alternative Name: " + alternativeName);
+            group.forEach(rwp -> System.out.println("  Rating: " + rwp.rating().getAlternativeRatings()));
+        });
 
         System.out.println("-------------------------\n");
         System.out.println("Multisets for every alternative");
 
-        List<Multiset> alternativesMultiset = new ArrayList<Multiset>();
+        List<Multiset> alternativesMultiset = new ArrayList<>();
 
         alternativesWithItsRatings.forEach((alternativeName, group) -> {
             Multiset newMultiset = new Multiset(alternativeName, group);

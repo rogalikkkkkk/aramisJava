@@ -5,11 +5,30 @@ import org.example.*;
 import java.util.*;
 
 public class RatingsGenerator {
-    static public Map<String, List<RatingWithProblem>> generateData(int altCount, int criteriaCount, int expertsCount) {
+    static public List<RatingWithProblem> generateData(
+            int altCount,
+            int criteriaCount,
+            int expertsCount,
+            Map<String, Integer> ratingDistribution
+    ) {
+        List<RatingWithProblem> result = new ArrayList<>();
         List<Criterion> criteria = new ArrayList<>();
-        final String[] baseArray = {"ОВ", "В", "С", "Н", "ОН"};
-        Map<String, List<RatingWithProblem>> result = new HashMap<>();
 
+        // Check if distribution is correct
+        int allRatings = ratingDistribution.values().stream().mapToInt(Integer::intValue).sum();
+        if (allRatings != altCount * expertsCount) {
+            throw new IllegalArgumentException("Sum of ratings distribution values don't match with number of ratings (altCount * expertsCount)");
+        }
+
+        // Generating list of ratings using distribution parameter
+        List<String> ratingsDistributed = new ArrayList<>();
+        for (String rating : ratingDistribution.keySet()) {
+            for (int i = 0; i < ratingDistribution.get(rating); i++) {
+                ratingsDistributed.add(rating);
+            }
+        }
+
+        // Creating set of criteria for problem in base scale with maximization
         for (int i = 0; i < criteriaCount; i++) {
             String criterionName = "Criterion " + (i + 1);
             Criterion crit = new Criterion(criterionName, Scale.BASE, OptimizationDirection.MAX);
@@ -17,26 +36,41 @@ public class RatingsGenerator {
             criteria.add(crit);
         }
 
+        // Creating problem with set of criteria
         Problem prblm = new Problem("Default problem", criteria);
 
+        // Calculating amount of all ratings
         for (int i = 0; i < altCount; i++) {
-            String altName = "Alternative " + (i + 1);
-            List<RatingWithProblem> allRatingsToAlt = new ArrayList<>();
-
             for (int j = 0; j < expertsCount; j++) {
-                List<String> ratings = new ArrayList<>();
+                RatingWithProblem rwp = new RatingWithProblem();
+                rwp.setProblem(prblm);
 
-                for (int k = 0; k < criteriaCount; k++) {
-                    Random rand = new Random();
-                    ratings.add(baseArray[rand.nextInt(baseArray.length)]);
-                }
+                String altName = "Alternative " + (i + 1);
+                Rating rtg = new Rating(prblm.getProblemName(), altName, new ArrayList<>());
+                rwp.setRating(rtg);
 
-                Rating currentRating = new Rating(prblm.getProblemName(), altName, ratings);
-                RatingWithProblem altRatingByExpert = new RatingWithProblem(currentRating, prblm);
-                allRatingsToAlt.add(altRatingByExpert);
+                result.add(rwp);
             }
+        }
 
-            result.put(altName, allRatingsToAlt);
+        // Distributing ratings to alternatives
+        for (int i = 0; i < criteriaCount; i++) {
+            List<String> possibleRatings = new ArrayList<>(ratingsDistributed);
+
+            for (int j = 0; j < altCount; j++) {
+                for (int k = 0; k < expertsCount; k++) {
+                    Random rand = new Random();
+                    RatingWithProblem currentRWP = result.get(j * expertsCount + k);
+                    List<String> currentAltExpRating = currentRWP.rating().getAlternativeRatings();
+                    List<String> newAltExpRating = new ArrayList<>(currentAltExpRating);
+
+                    int selectedIndex = rand.nextInt(possibleRatings.size());
+                    newAltExpRating.add(possibleRatings.get(selectedIndex));
+                    possibleRatings.remove(selectedIndex);
+
+                    currentRWP.rating().setAlternativeRatings(newAltExpRating);
+                }
+            }
         }
 
         return result;

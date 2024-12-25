@@ -3,13 +3,15 @@ package org.example;
 import java.util.Objects;
 
 public final class RatingWithProblem {
-    private final Rating rating;
-    private final Problem problem;
+    private Rating rating;
+    private Problem problem;
 
     public RatingWithProblem(Rating rating, Problem problem) {
         this.rating = rating;
         this.problem = problem;
     }
+
+    public RatingWithProblem() {}
 
     public Rating rating() {
         return rating;
@@ -17,6 +19,14 @@ public final class RatingWithProblem {
 
     public Problem problem() {
         return problem;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
+
+    public void setProblem(Problem problem) {
+        this.problem = problem;
     }
 
     @Override

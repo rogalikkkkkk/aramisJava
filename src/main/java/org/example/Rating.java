@@ -3,13 +3,14 @@ package org.example;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Rating {
 
     private final String problemName;
     private final String alternativeName;
-    private final List<String> alternativeRatings;
+    private List<String> alternativeRatings;
 
     @JsonCreator
     public Rating(
@@ -33,5 +34,8 @@ public class Rating {
         return alternativeRatings;
     }
 
+    public void setAlternativeRatings(List<String> alternativeRatings) {
+        this.alternativeRatings = new ArrayList<>(alternativeRatings);
+    }
 
 }
